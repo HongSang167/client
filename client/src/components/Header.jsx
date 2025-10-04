@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Search, User, ShoppingCart } from "lucide-react";
+import { Link } from "react-router-dom";
 import AuthSidebar from "./AuthSidebar";
 import { useAuth } from "@/context/AuthContext";
 import UserMenuModal from "./admin/UserMenuModal";
@@ -21,15 +22,17 @@ function Header() {
       <header className="text-black p-4 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-2">
-            <img src="/pawpulse.jpg" alt="PAWPULSE Logo" className="w-30 h-24" />
+            <img src="/pawpulse.jpg" alt="PAWPULSE Logo" className="w-40 h-25" />
           </div>
 
-          <nav className="flex space-x-8">
-            <a href="#" className="hover:text-gray-700">Home</a>
-            <a href="#" className="hover:text-gray-700">Products</a>
-            <a href="#" className="hover:text-gray-700">Appointments</a>
-            <a href="#" className="hover:text-gray-700">Pet Records</a>
-            <a href="#" className="hover:text-gray-700">Contact</a>
+          <nav className="container mx-auto flex justify-center p-4">
+            <div className="space-x-6">
+              <Link to="/" className="hover:text-gray-700">Home</Link>
+              <Link to="/products" className="hover:text-gray-700">Products</Link>
+              <Link to="/appointments" className="hover:text-gray-700">Appointments</Link>
+              <Link to="/records" className="hover:text-gray-700">Pet Records</Link>
+              <Link to="/contact" className="hover:text-gray-700">Contact</Link>
+            </div>
           </nav>
 
           <div className="flex items-center space-x-4 relative">

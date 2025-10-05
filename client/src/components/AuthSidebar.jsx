@@ -1,114 +1,99 @@
-import React, { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { useAuth } from "@/context/AuthContext";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { X } from "lucide-react";
 
 function AuthSidebar({ onClose }) {
-  const [openLogin, setOpenLogin] = useState(false);
-  const [openSignup, setOpenSignup] = useState(false);
-  const [loginStep, setLoginStep] = useState("login");
-  const { login, users } = useAuth();
-
-  const handleLogin = (e) => {
-    e.preventDefault();
-    const email = e.target.email.value;
-    const password = e.target.password.value;
-
-    const foundUser = users.find(u => u.email === email);
-    if (foundUser && password === "123456") {
-      login(foundUser);
-      setOpenLogin(false);
-      onClose();
-    } else {
-      alert("❌ Sai email hoặc mật khẩu!");
-    }
-  };
-
-  const handleSignup = (e) => {
-    e.preventDefault();
-    const name = e.target.fullname.value;
-    const email = e.target.email.value;
-    const pass = e.target.password.value;
-    const confirm = e.target.confirm.value;
-
-    if (pass !== confirm) {
-      alert("⚠️ Mật khẩu không khớp!");
-      return;
-    }
-
-    alert(`🎉 Tạo tài khoản thành công cho ${name} (${email})`);
-    setOpenSignup(false);
-    setOpenLogin(true);
-    setLoginStep("login");
-  };
+  const navigate = useNavigate();
 
   return (
     <div className="fixed inset-0 flex justify-end z-50">
-      <div className="absolute inset-0 bg-black bg-opacity-50" onClick={onClose}></div>
+      {/* Lớp mờ nền */}
+      <div 
+        className="absolute inset-0 bg-black bg-opacity-40 backdrop-blur-sm transition-opacity duration-300" 
+        onClick={onClose}
+      ></div>
 
-      <div className="relative w-96 bg-white h-full shadow-lg p-6 animate-slideIn">
+      {/* Sidebar */}
+      <div className="relative w-80 bg-white h-full shadow-xl border-l border-gray-100 p-8 animate-slideIn">
+        {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-black text-2xl"
+          className="absolute top-6 right-6 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-all duration-200"
         >
-          ✕
+          <X className="w-5 h-5" />
         </button>
 
-        <h2 className="text-xl font-bold mb-6">Welcome</h2>
-        <p className="font-semibold mb-4">Track orders, your shopping history & more!</p>
+        {/* Content */}
+        <div className="flex flex-col h-full pt-12">
+          {/* Header */}
+          <div className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome</h2>
+            <p className="text-gray-500 text-sm">
+              Sign in to your account or create a new one
+            </p>
+          </div>
 
-        <button
-          onClick={() => { setLoginStep("login"); setOpenLogin(true); }}
-          className="w-full bg-black text-white py-3 rounded-md font-medium mb-6 hover:bg-gray-800"
-        >
-          Go to Sign In
-        </button>
+          {/* Buttons */}
+          <div className="space-y-4">
+            <button
+              onClick={() => {
+                onClose();
+                navigate("/signin");
+              }}
+              className="w-full bg-gray-900 text-white py-3.5 rounded-lg font-medium hover:bg-gray-800 active:bg-gray-700 transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+            >
+              Go to Sign In
+            </button>
 
-        <Dialog open={openLogin} onOpenChange={setOpenLogin}>
-          <DialogContent className="p-6 rounded-2xl max-w-md">
-            <DialogHeader>
-              <DialogTitle className="text-center text-2xl font-bold">Login</DialogTitle>
-            </DialogHeader>
+            <button
+              onClick={() => {
+                onClose();
+                navigate("/signup");
+              }}
+              className="w-full border-2 border-gray-300 text-gray-900 py-3.5 rounded-lg font-medium hover:border-gray-400 hover:bg-gray-50 active:bg-gray-100 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2"
+            >
+              New Customer? Sign Up here
+            </button>
+          </div>
 
-            {loginStep === "login" && (
-              <form className="space-y-4" onSubmit={handleLogin}>
-                <input type="email" name="email" placeholder="Email" className="w-full border p-2 rounded" />
-                <input type="password" name="password" placeholder="Password" className="w-full border p-2 rounded" />
-                <Button type="submit" className="w-full">Sign in</Button>
-                <p
-                  className="text-sm text-center mt-2 cursor-pointer underline"
-                  onClick={() => { setOpenLogin(false); setOpenSignup(true); }}
-                >
-                  Create account
-                </p>
-              </form>
-            )}
-          </DialogContent>
-        </Dialog>
+          {/* Divider */}
+          <div className="flex items-center my-8">
+            <div className="flex-1 border-t border-gray-200"></div>
+            <span className="px-4 text-sm text-gray-400">or</span>
+            <div className="flex-1 border-t border-gray-200"></div>
+          </div>
 
-        <button
-          onClick={() => setOpenSignup(true)}
-          className="w-full border border-gray-400 py-3 rounded-md font-medium hover:bg-gray-100"
-        >
-          New Customer? Sign Up here
-        </button>
-
-        <Dialog open={openSignup} onOpenChange={setOpenSignup}>
-          <DialogContent className="p-6 rounded-2xl max-w-md">
-            <DialogHeader>
-              <DialogTitle className="text-center text-2xl font-bold">Sign Up</DialogTitle>
-            </DialogHeader>
-
-            <form className="space-y-4" onSubmit={handleSignup}>
-              <input type="text" name="fullname" placeholder="Full Name" className="w-full border p-2 rounded" />
-              <input type="email" name="email" placeholder="Email" className="w-full border p-2 rounded" />
-              <input type="password" name="password" placeholder="Password" className="w-full border p-2 rounded" />
-              <input type="password" name="confirm" placeholder="Confirm Password" className="w-full border p-2 rounded" />
-              <Button type="submit" className="w-full">Create Account</Button>
-            </form>
-          </DialogContent>
-        </Dialog>
+          {/* Additional Info */}
+          <div className="mt-auto pt-8 border-t border-gray-100">
+            <p className="text-xs text-gray-400 text-center">
+              By continuing, you agree to our{" "}
+              <a href="#" className="text-gray-600 hover:text-gray-800 underline">
+                Terms of Service
+              </a>{" "}
+              and{" "}
+              <a href="#" className="text-gray-600 hover:text-gray-800 underline">
+                Privacy Policy
+              </a>
+            </p>
+          </div>
+        </div>
       </div>
+
+      <style jsx>{`
+        @keyframes slideIn {
+          from {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+        .animate-slideIn {
+          animation: slideIn 0.3s ease-out forwards;
+        }
+      `}</style>
     </div>
   );
 }
